@@ -84,8 +84,8 @@ static void
 vec2_class_init (EleaVec2fClass *klass)
 {
 	az_class_set_num_properties ((AZClass *) klass, NUM_PROPERTIES);
-	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT, (const unsigned char *) "invert", vec2f_invoke_invert, ELEA_TYPE_VECTOR2F, 0, NULL);
 	az_class_define_static_method_va ((AZClass *) klass, FUNC_NEW, (const unsigned char *) "new", vec2f_invoke_new, ELEA_TYPE_VECTOR2F, 2, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT);
+	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT, (const unsigned char *) "invert", vec2f_invoke_invert, ELEA_TYPE_VECTOR2F, 0, NULL);
 	az_class_define_method_va ((AZClass *) klass, FUNC_ADD, (const unsigned char *) "add", vec2f_invoke_add, ELEA_TYPE_VECTOR2F, 1, ELEA_TYPE_VECTOR2F);
 	az_class_define_method_va ((AZClass *) klass, FUNC_SUBTRACT, (const unsigned char *) "subtract", vec2f_invoke_subtract, ELEA_TYPE_VECTOR2F, 1, ELEA_TYPE_VECTOR2F);
 	az_class_define_method_va ((AZClass *) klass, FUNC_MULTIPLY, (const unsigned char *) "multiply", vec2f_invoke_multiply, ELEA_TYPE_VECTOR2F, 1, AZ_TYPE_FLOAT);

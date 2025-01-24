@@ -77,10 +77,9 @@ unsigned int
 elea_vec4f_get_type(void)
 {
 	if (!vec4_type) {
-		az_register_type(&vec4_type, (const unsigned char*) "Vector4f", AZ_TYPE_STRUCT, sizeof(EleaVec4fClass), sizeof(EleaVec4f), AZ_CLASS_IS_FINAL,
+		vec4_class = ( EleaVec4fClass *) az_register_type(&vec4_type, (const unsigned char*) "Vector4f", AZ_TYPE_STRUCT, sizeof(EleaVec4fClass), sizeof(EleaVec4f), AZ_CLASS_IS_FINAL,
 			(void (*) (AZClass*)) vec4_class_init,
 			NULL, NULL);
-		vec4_class = ( EleaVec4fClass*) az_type_get_class(vec4_type);
 	}
 	return vec4_type;
 }

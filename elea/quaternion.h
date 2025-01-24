@@ -8,7 +8,7 @@
 *
 */
 
-typedef struct _EleaQuatf EleaQuatf;
+#define ELEA_TYPE_QUATF elea_quatf_get_type ()
 
 #include <math.h>
 #include <string.h>
