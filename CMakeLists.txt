@@ -14,3 +14,5 @@ add_subdirectory(elea)
 #if(BUILD_TESTING)
 #  add_subdirectory(tests)
 #endif()
+
+set(HAS_ELEA true PARENT_SCOPE)
