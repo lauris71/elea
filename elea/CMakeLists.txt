@@ -32,20 +32,15 @@ set(ELEA_SOURCES
 	vector4.c
 )
 
-add_library(elea_obj OBJECT
+add_library(elea STATIC
 	${ELEA_HEADERS}
 	${ELEA_SOURCES}
 )
 
-set_property(TARGET elea_obj PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET elea PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories(elea_obj PUBLIC
+target_include_directories(elea PUBLIC
 	${PROJECT_SOURCE_DIR}
 	${CMAKE_SOURCE_DIR}/arikkei
     ${CMAKE_SOURCE_DIR}/az
-)
-
-add_library(elea STATIC
-    ${ELEA_HEADERS}
-    $<TARGET_OBJECTS:elea_obj>
 )

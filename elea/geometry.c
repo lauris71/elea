@@ -403,7 +403,7 @@ subdivideSide (Side *side, Side *sb, unsigned int *spos, CBuf *cbuf, unsigned in
 			v = elea_vec3f_normalize(v);
 			v = elea_vec3f_mul(v, radius);
 		}
-		bool end = 0;
+		unsigned int end = 0;
 		if (cbuf->texcoords) {
 			end = (cbuf_texCoord (cbuf, side->v0)->x > 0.5f) || (cbuf_texCoord (cbuf, side->v1)->y > 0.5f);
 		}

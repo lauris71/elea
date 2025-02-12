@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED YES)
 
 PROJECT(elea)
@@ -15,4 +15,6 @@ add_subdirectory(elea)
 #  add_subdirectory(tests)
 #endif()
 
-set(HAS_ELEA true PARENT_SCOPE)
+if(NOT PROJECT_IS_TOP_LEVEL)
+  set(HAS_ELEA true PARENT_SCOPE)
+endif()
