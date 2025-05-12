@@ -61,7 +61,7 @@ unsigned int
 elea_mat3x4f_get_type (void)
 {
 	if (!mat_type) {
-		az_register_type (&mat_type, (const unsigned char *) "Matrix3x4f", AZ_TYPE_STRUCT, sizeof (EleaMat3x4fClass), sizeof (EleaMat3x4f), AZ_CLASS_IS_FINAL,
+		az_register_type (&mat_type, (const unsigned char *) "Matrix3x4f", AZ_TYPE_STRUCT, sizeof (EleaMat3x4fClass), sizeof (EleaMat3x4f), AZ_FLAG_FINAL,
 			(void (*) (AZClass *)) matrix_class_init,
 			(void (*) (const AZImplementation *, void *)) matrix_init,
 			NULL);
@@ -75,7 +75,7 @@ elea_mat3x4f_get_type (void)
 static void
 matrix_class_init (EleaMat3x4fClass *klass)
 {
-	klass->az_klass.alignment = 16;
+	klass->az_klass.alignment = 15;
 	az_class_set_num_properties ((AZClass *) klass, NUM_PROPERTIES);
 	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT, (const unsigned char *) "invert", matrix_call_invert, ELEA_TYPE_MATRIX3X4F, 0);
 	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT_NORMALIZED, (const unsigned char *) "invertNormalized", matrix_call_invertNormalized, ELEA_TYPE_MATRIX3X4F, 0);

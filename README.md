@@ -24,9 +24,9 @@ It integrates with [az](https://github.com/lauris71/az) library for run-time typ
 ## Building
 
 It needs arikkei and az libraries for type system. Just clone [arikkei](https://github.com/lauris71/arikkei) and [az](https://github.com/lauris71/az) to an accessible place (either to the root of the main project or elea).
-Then, in the az project directory execute:
+Then, in the elea project directory execute:
 
     cmake -S . -B build
     cmake --build build
 
-The provided makefiles builds static library.
+The provided cmake configuration builds static library.

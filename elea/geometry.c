@@ -496,7 +496,8 @@ generateBox (float *v, unsigned int v_stride_bytes, float *n, unsigned int n_str
 	for (int i = 0; i < 6; i++) {
 		if (v) {
 			for (int j = 0; j < 4; j++) {
-				memcpy ((char *) v + (4 * i + j) * v_stride_bytes, &corners[ck[4 * i + j]], sizeof (EleaVec3f));
+				float *coords = (float *) ((char *) v + (4 * i + j) * v_stride_bytes);
+				memcpy (coords, &corners[ck[4 * i + j]], sizeof (EleaVec3f));
 			}
 		}
 		if (n) {

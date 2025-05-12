@@ -49,7 +49,7 @@ unsigned int
 elea_mat4x4f_get_type (void)
 {
 	if (!mat_type) {
-		az_register_type (&mat_type, (const unsigned char *) "Matrix4x4f", AZ_TYPE_STRUCT, sizeof (EleaMat4x4fClass), sizeof (EleaMat4x4f), AZ_CLASS_IS_FINAL,
+		az_register_type (&mat_type, (const unsigned char *) "Matrix4x4f", AZ_TYPE_STRUCT, sizeof (EleaMat4x4fClass), sizeof (EleaMat4x4f), AZ_FLAG_FINAL,
 			(void (*) (AZClass *)) matrix_class_init,
 			(void (*) (const AZImplementation *, void *)) matrix_init,
 			NULL);
@@ -63,7 +63,7 @@ elea_mat4x4f_get_type (void)
 static void
 matrix_class_init (EleaMat4x4fClass *klass)
 {
-	klass->az_klass.alignment = 16;
+	klass->az_klass.alignment = 15;
 	az_class_set_num_properties ((AZClass *) klass, NUM_PROPERTIES);
 	/* fixme: Implement READ_VALUE_PTR type? */
 	az_class_define_property ((AZClass *) klass, PROP_IDENTITY, (const unsigned char *) "IDENTITY", ELEA_TYPE_MATRIX4X4F, 1,

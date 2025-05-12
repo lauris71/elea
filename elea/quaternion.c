@@ -69,7 +69,7 @@ unsigned int
 elea_quatf_get_type (void)
 {
 	if (!quat_type) {
-		quat_class = (EleaQuatfClass *) az_register_type (&quat_type, (const unsigned char*) "Quaternionf", AZ_TYPE_STRUCT, sizeof (EleaQuatfClass), sizeof (EleaQuatf), AZ_CLASS_IS_FINAL,
+		quat_class = (EleaQuatfClass *) az_register_type (&quat_type, (const unsigned char*) "Quaternionf", AZ_TYPE_STRUCT, sizeof (EleaQuatfClass), sizeof (EleaQuatf), AZ_FLAG_FINAL,
 			(void (*) (AZClass*)) quat_class_init,
 			NULL, NULL);
 	}
@@ -79,7 +79,6 @@ elea_quatf_get_type (void)
 static void
 quat_class_init (EleaQuatfClass* klass)
 {
-	klass->az_klass.alignment = 4;
 	az_class_set_num_properties (( AZClass*) klass, NUM_PROPERTIES);
 	az_class_define_static_method_va ((AZClass *) klass, FUNC_NEW, (const unsigned char *) "new", quat_invoke_new, ELEA_TYPE_QUATF, 4, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT);
 	az_class_define_method_va ((AZClass*) klass, FUNC_NORM, (const unsigned char*) "norm", quat_invoke_norm, AZ_TYPE_FLOAT, 0 );

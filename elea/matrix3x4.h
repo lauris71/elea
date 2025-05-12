@@ -319,7 +319,7 @@ elea_mat3x4f_rotate_right_axis_xyz_angle (EleaMat3x4f *dst, const EleaMat3x4f *_
 }
 
 ELEA_INLINE EleaMat3x4f *
-elea_mat3x4f_rotate_right_axis_angle (EleaMat3x4f *dst, const EleaMat3x4f *src, const EleaVec3f *axis, float angle)
+elea_mat3x4f_rotate_right_axis_angle (EleaMat3x4f *dst, const EleaMat3x4f *__restrict src, const EleaVec3f *axis, float angle)
 {
 	return elea_mat3x4f_rotate_right_axis_xyz_angle (dst, src, axis->x, axis->y, axis->z, angle);
 }

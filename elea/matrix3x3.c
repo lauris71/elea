@@ -45,7 +45,7 @@ unsigned int
 elea_mat3x3f_get_type (void)
 {
 	if (!mat_type) {
-		az_register_type (&mat_type, (const unsigned char *) "Matrix3x3f", AZ_TYPE_STRUCT, sizeof (EleaMat3x3fClass), sizeof (EleaMat3x3f), AZ_CLASS_IS_FINAL,
+		az_register_type (&mat_type, (const unsigned char *) "Matrix3x3f", AZ_TYPE_STRUCT, sizeof (EleaMat3x3fClass), sizeof (EleaMat3x3f), AZ_FLAG_FINAL,
 			(void (*) (AZClass *)) matrix_class_init,
 			(void (*) (const AZImplementation *, void *)) matrix_init,
 			NULL);

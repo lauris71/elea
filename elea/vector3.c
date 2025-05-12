@@ -78,7 +78,7 @@ unsigned int
 elea_vec3f_get_type (void)
 {
 	if (!vec3_type) {
-		az_register_type (&vec3_type, (const unsigned char *) "Vector3f", AZ_TYPE_STRUCT, sizeof (EleaVec3fClass), sizeof (EleaVec3f), AZ_CLASS_IS_FINAL,
+		az_register_type (&vec3_type, (const unsigned char *) "Vector3f", AZ_TYPE_STRUCT, sizeof (EleaVec3fClass), sizeof (EleaVec3f), AZ_FLAG_FINAL,
 			(void (*) (AZClass *)) vec3_class_init,
 			NULL, NULL);
 		elea_vec3f_class = (EleaVec3fClass *) az_type_get_class (vec3_type);
