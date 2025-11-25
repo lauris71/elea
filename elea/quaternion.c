@@ -9,9 +9,8 @@
 
 #include <arikkei/arikkei-strlib.h>
 
-#include <az/class.h>
-#include <az/field.h>
 #include <az/serialization.h>
+#include <az/extend.h>
 
 #include "quaternion.h"
 
@@ -188,7 +187,7 @@ quat_invoke_normalize(const AZImplementation* arg_impls[], const AZValue* arg_va
 static unsigned int
 quat_invoke_multiply(const AZImplementation* arg_impls[], const AZValue* arg_vals[], const AZImplementation** ret_impl, AZValue64* ret_val, AZContext* ctx)
 {
-	if (arg_impls[1]->type == AZ_TYPE_FLOAT) {
+	if (AZ_IMPL_TYPE(arg_impls[1]) == AZ_TYPE_FLOAT) {
 		elea_quatfp_mul_scalar((EleaQuatf *) ret_val, (EleaQuatf *) arg_vals[0], arg_vals[1]->float_v);
 	} else {
 		elea_quatfp_mul((EleaQuatf *) ret_val, (EleaQuatf *) arg_vals[0], (EleaQuatf *) arg_vals[1]);

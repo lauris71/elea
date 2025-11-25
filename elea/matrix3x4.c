@@ -8,9 +8,9 @@
  */
 
 #include <arikkei/arikkei-strlib.h>
-#include <az/class.h>
 #include <az/field.h>
 #include <az/serialization.h>
+#include <az/extend.h>
 
 #include <elea/aabox.h>
 #include <elea/matrix3x4.h>
@@ -192,7 +192,7 @@ matrix_call_transformPoint3 (const AZImplementation **arg_impls, const AZValue *
 {
 	EleaMat3x4f *mat = (EleaMat3x4f *) arg_vals[0];
 	EleaVec3f *dst = (EleaVec3f *) ret_val;
-	if (arg_impls[1]->type == AZ_TYPE_FLOAT) {
+	if (AZ_IMPL_TYPE(arg_impls[1]) == AZ_TYPE_FLOAT) {
 		elea_mat3x4f_transform_point_xyz (dst, mat, arg_vals[1]->float_v, arg_vals[2]->float_v, arg_vals[3]->float_v);
 	} else {
 		elea_mat3x4f_transform_point (dst, mat, (EleaVec3f *) arg_vals[1]);
@@ -206,7 +206,7 @@ matrix_call_transformVector3 (const AZImplementation **arg_impls, const AZValue 
 {
 	EleaMat3x4f *mat = (EleaMat3x4f *) arg_vals[0];
 	EleaVec3f *dst = (EleaVec3f *) ret_val;
-	if (arg_impls[1]->type == AZ_TYPE_FLOAT) {
+	if (AZ_IMPL_TYPE(arg_impls[1]) == AZ_TYPE_FLOAT) {
 		elea_mat3x4f_transform_vec3_xyz (dst, mat, arg_vals[1]->float_v, arg_vals[2]->float_v, arg_vals[3]->float_v);
 	} else {
 		elea_mat3x4f_transform_vec3 (dst, mat, (EleaVec3f *) arg_vals[1]);

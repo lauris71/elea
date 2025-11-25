@@ -8,9 +8,9 @@
  */
 
 #include <arikkei/arikkei-strlib.h>
-#include <az/class.h>
 #include <az/field.h>
 #include <az/serialization.h>
+#include <az/extend.h>
 
 #include <elea/aabox.h>
 #include <elea/matrix3x3.h>

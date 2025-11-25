@@ -14,6 +14,7 @@
 #include <az/class.h>
 #include <az/field.h>
 #include <az/serialization.h>
+#include <az/extend.h>
 
 #include "color.h"
 

@@ -11,9 +11,8 @@
 
 #include <arikkei/arikkei-strlib.h>
 
-#include <az/class.h>
-#include <az/field.h>
 #include <az/serialization.h>
+#include <az/extend.h>
 
 #include "vector3.h"
 
