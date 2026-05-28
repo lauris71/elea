@@ -54,7 +54,7 @@ unsigned int
 elea_color4f_get_type (void)
 {
 	if (!color_type) {
-		az_register_type (&color_type, (const unsigned char *) "Color4f", AZ_TYPE_STRUCT, sizeof (EleaColor4fClass), sizeof (EleaColor4f), AZ_FLAG_FINAL,
+		az_register_type (&color_type, (const unsigned char *) "Color4f", AZ_TYPE_STRUCT, sizeof (EleaColor4fClass), sizeof (EleaColor4f), AZ_FLAG_FINAL, 0, NUM_PROPERTIES,
 			(void (*) (AZClass *)) color_class_init,
 			NULL, NULL);
 	}
@@ -64,7 +64,6 @@ elea_color4f_get_type (void)
 static void
 color_class_init (EleaColor4fClass *klass)
 {
-	az_class_set_num_properties(( AZClass*) klass, NUM_PROPERTIES);
 	az_class_define_property(( AZClass*) klass, PROP_R, (const unsigned char*) "r", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET(EleaColor4f, r), NULL, NULL);
 	az_class_define_property(( AZClass*) klass, PROP_G, (const unsigned char*) "g", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET(EleaColor4f, g), NULL, NULL);
 	az_class_define_property(( AZClass*) klass, PROP_B, (const unsigned char*) "b", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET(EleaColor4f, b), NULL, NULL);

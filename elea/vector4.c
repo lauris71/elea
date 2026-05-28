@@ -76,7 +76,7 @@ unsigned int
 elea_vec4f_get_type(void)
 {
 	if (!vec4_type) {
-		vec4_class = ( EleaVec4fClass *) az_register_type(&vec4_type, (const unsigned char*) "Vector4f", AZ_TYPE_STRUCT, sizeof(EleaVec4fClass), sizeof(EleaVec4f), AZ_FLAG_FINAL,
+		vec4_class = ( EleaVec4fClass *) az_register_type(&vec4_type, (const unsigned char*) "Vector4f", AZ_TYPE_STRUCT, sizeof(EleaVec4fClass), sizeof(EleaVec4f), AZ_FLAG_FINAL, 0, NUM_PROPERTIES,
 			(void (*) (AZClass*)) vec4_class_init,
 			NULL, NULL);
 	}
@@ -86,7 +86,6 @@ elea_vec4f_get_type(void)
 static void
 vec4_class_init(EleaVec4fClass* klass)
 {
-	az_class_set_num_properties(( AZClass*) klass, NUM_PROPERTIES);
 	az_class_define_method_va ((AZClass*) klass, FUNC_INVERT, (const unsigned char*) "invert", vec4f_invoke_invert, ELEA_TYPE_VECTOR4F, 0);
 	az_class_define_static_method_va ((AZClass*) klass, FUNC_NEW, (const unsigned char*) "new", vec4f_invoke_new, ELEA_TYPE_VECTOR4F, 4, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT);
 	az_class_define_method_va ((AZClass*) klass, FUNC_ADD, (const unsigned char*) "add", vec4f_invoke_add, ELEA_TYPE_VECTOR4F, 1, ELEA_TYPE_VECTOR4F );
