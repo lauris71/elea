@@ -14,6 +14,7 @@ set(ELEA_HEADERS
 	vector2.h
 	vector3.h
 	vector4.h
+	private.h
 )
 
 set(ELEA_SOURCES
@@ -30,6 +31,7 @@ set(ELEA_SOURCES
 	vector2.c
 	vector3.c
 	vector4.c
+	private.c
 )
 
 add_library(elea STATIC

@@ -9,10 +9,9 @@
 
 #include <string.h>
 
-#include <arikkei/arikkei-strlib.h>
-
-#include <az/serialization.h>
 #include <az/extend.h>
+
+#include <elea/private.h>
 
 #include "vector3.h"
 
@@ -26,22 +25,9 @@ const EleaVec3f EleaVec3fY = { 0, 1, 0 };
 const EleaVec3f EleaVec3fZ = { 0, 0, 1 };
 
 static void vec3_class_init (EleaVec3fClass *klass);
-/* AZClass implementation */
-static unsigned int vec3_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx);
-static unsigned int vec3_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx);
-static unsigned int vec3_to_string (const AZImplementation *impl, void *instance, unsigned char *buf, unsigned int len);
 
 static unsigned int vec3f_invoke_new (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_invert (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_add (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_subtract (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_multiply (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_divide (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_dot (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
 static unsigned int vec3f_invoke_cross (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_length2 (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_length (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec3f_invoke_normalize (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
 static unsigned int vec3f_invoke_angle (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
 
 enum {
@@ -88,17 +74,17 @@ elea_vec3f_get_type (void)
 static void
 vec3_class_init (EleaVec3fClass *klass)
 {
-	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT, (const unsigned char *) "invert", vec3f_invoke_invert, ELEA_TYPE_VECTOR3F, 0);
 	az_class_define_static_method_va ((AZClass *) klass, FUNC_NEW, (const unsigned char *) "new", vec3f_invoke_new, ELEA_TYPE_VECTOR3F, 3, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT);
-	az_class_define_method_va ((AZClass *) klass, FUNC_ADD, (const unsigned char *) "add", vec3f_invoke_add, ELEA_TYPE_VECTOR3F, 1, ELEA_TYPE_VECTOR3F);
-	az_class_define_method_va ((AZClass *) klass, FUNC_SUBTRACT, (const unsigned char *) "subtract", vec3f_invoke_subtract, ELEA_TYPE_VECTOR3F, 1, ELEA_TYPE_VECTOR3F);
-	az_class_define_method_va ((AZClass *) klass, FUNC_MULTIPLY, (const unsigned char *) "multiply", vec3f_invoke_multiply, ELEA_TYPE_VECTOR3F, 1, AZ_TYPE_FLOAT);
-	az_class_define_method_va ((AZClass *) klass, FUNC_DIVIDE, (const unsigned char *) "divide", vec3f_invoke_divide, ELEA_TYPE_VECTOR3F, 1, AZ_TYPE_FLOAT);
-	az_class_define_method_va ((AZClass *) klass, FUNC_DOT, (const unsigned char *) "dot", vec3f_invoke_dot, AZ_TYPE_FLOAT, 1, ELEA_TYPE_VECTOR3F);
+	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT, (const unsigned char *) "invert", vec_invoke_invert, ELEA_TYPE_VECTOR3F, 0);
+	az_class_define_method_va ((AZClass *) klass, FUNC_ADD, (const unsigned char *) "add", vec_invoke_add, ELEA_TYPE_VECTOR3F, 1, ELEA_TYPE_VECTOR3F);
+	az_class_define_method_va ((AZClass *) klass, FUNC_SUBTRACT, (const unsigned char *) "subtract", vec_invoke_subtract, ELEA_TYPE_VECTOR3F, 1, ELEA_TYPE_VECTOR3F);
+	az_class_define_method_va ((AZClass *) klass, FUNC_MULTIPLY, (const unsigned char *) "multiply", vec_invoke_multiply, ELEA_TYPE_VECTOR3F, 1, AZ_TYPE_FLOAT);
+	az_class_define_method_va ((AZClass *) klass, FUNC_DIVIDE, (const unsigned char *) "divide", vec_invoke_divide, ELEA_TYPE_VECTOR3F, 1, AZ_TYPE_FLOAT);
+	az_class_define_method_va ((AZClass *) klass, FUNC_DOT, (const unsigned char *) "dot", vec_invoke_dot, AZ_TYPE_FLOAT, 1, ELEA_TYPE_VECTOR3F);
 	az_class_define_method_va ((AZClass *) klass, FUNC_CROSS, (const unsigned char *) "cross", vec3f_invoke_cross, ELEA_TYPE_VECTOR3F, 1, ELEA_TYPE_VECTOR3F);
-	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH2, (const unsigned char *) "length2", vec3f_invoke_length2, AZ_TYPE_FLOAT, 0);
-	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH, (const unsigned char *) "length", vec3f_invoke_length, AZ_TYPE_FLOAT, 0);
-	az_class_define_method_va ((AZClass *) klass, FUNC_NORMALIZE, (const unsigned char *) "normalize", vec3f_invoke_normalize, ELEA_TYPE_VECTOR3F, 0);
+	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH2, (const unsigned char *) "length2", vec_invoke_length2, AZ_TYPE_FLOAT, 0);
+	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH, (const unsigned char *) "length", vec_invoke_length, AZ_TYPE_FLOAT, 0);
+	az_class_define_method_va ((AZClass *) klass, FUNC_NORMALIZE, (const unsigned char *) "normalize", vec_invoke_normalize, ELEA_TYPE_VECTOR3F, 0);
 	az_class_define_method_va ((AZClass *) klass, FUNC_ANGLE, (const unsigned char *) "angle", vec3f_invoke_angle, AZ_TYPE_FLOAT, 1, ELEA_TYPE_VECTOR3F);
 
 	az_class_define_property ((AZClass *) klass, PROP_X, (const unsigned char *) "x", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaVec3f, x), NULL, NULL);
@@ -112,37 +98,9 @@ vec3_class_init (EleaVec3fClass *klass)
 		AZ_FIELD_CLASS, AZ_FIELD_READ_STORED_STATIC, AZ_FIELD_WRITE_NONE, 0, (const AZImplementation *) klass, (void *) &EleaVec3fY);
 	az_class_define_property ((AZClass *) klass, PROP_UNIT_Z, (const unsigned char *) "UNIT_Z", ELEA_TYPE_VECTOR3F, 1,
 		AZ_FIELD_CLASS, AZ_FIELD_READ_STORED_STATIC, AZ_FIELD_WRITE_NONE, 0, (const AZImplementation *) klass, (void *) &EleaVec3fZ);
-	klass->az_klass.serialize = vec3_serialize;
-	klass->az_klass.deserialize = vec3_deserialize;
-	klass->az_klass.to_string = vec3_to_string;
-}
-
-static unsigned int
-vec3_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx)
-{
-	return az_serialize_floats(d, dlen, inst, 3);
-}
-
-static unsigned int
-vec3_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx)
-{
-	return az_deserialize_floats(value, s, slen, 3);
-}
-
-static unsigned int
-vec3_to_string (const AZImplementation *impl, void *instance, unsigned char *buf, unsigned int len)
-{
-	EleaVec3f *vec = (EleaVec3f *) instance;
-	unsigned int pos = 0, i;
-	if (pos < len) buf[pos++] = '(';
-	for (i = 0; i < 2; i++) {
-		pos += arikkei_dtoa_exp (buf + pos, (len > pos) ? len - pos : 0, vec->c[i], 6, -5, 5);
-		if (pos < len) buf[pos++] = ',';
-	}
-	pos += arikkei_dtoa_exp (buf + pos, (len > pos) ? len - pos : 0, vec->c[2], 6, -5, 5);
-	if (pos < len) buf[pos++] = ')';
-	if (pos < len) buf[pos] = 0;
-	return pos;
+	klass->az_klass.serialize = vec_serialize;
+	klass->az_klass.deserialize = vec_deserialize;
+	klass->az_klass.to_string = vec_to_string;
 }
 
 static unsigned int
@@ -154,82 +112,10 @@ vec3f_invoke_new (const AZImplementation *arg_impls[], const AZValue *arg_vals[]
 }
 
 static unsigned int
-vec3f_invoke_invert (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) elea_vec3f_class;
-	elea_vec3fp_inv ((EleaVec3f *) ret_val, (EleaVec3f *) arg_vals[0]);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_add (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) elea_vec3f_class;
-	elea_vec3fp_add ((EleaVec3f *) ret_val, (EleaVec3f *) arg_vals[0], (EleaVec3f *) arg_vals[1]);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_subtract (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) elea_vec3f_class;
-	elea_vec3fp_sub ((EleaVec3f *) ret_val, (EleaVec3f *) arg_vals[0], (EleaVec3f *) arg_vals[1]);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_multiply (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) elea_vec3f_class;
-	elea_vec3fp_mul ((EleaVec3f *) ret_val, (EleaVec3f *) arg_vals[0], arg_vals[1]->float_v);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_divide (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) elea_vec3f_class;
-	elea_vec3fp_div ((EleaVec3f *) ret_val, (EleaVec3f *) arg_vals[0], arg_vals[1]->float_v);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_dot (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) az_type_get_class (AZ_TYPE_FLOAT);
-	ret_val->value.float_v = elea_vec3fp_dot ((EleaVec3f *) arg_vals[0], (EleaVec3f *) arg_vals[1]);
-	return 1;
-}
-
-static unsigned int
 vec3f_invoke_cross (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
 {
 	*ret_impl = (AZImplementation *) elea_vec3f_class;
 	elea_vec3fp_cross((EleaVec3f *) ret_val, (EleaVec3f *) arg_vals[0], (EleaVec3f *) arg_vals[1]);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_length2 (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) az_type_get_class (AZ_TYPE_FLOAT);
-	ret_val->value.float_v = elea_vec3fp_len2 ((EleaVec3f *) arg_vals[0]);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_length (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) az_type_get_class (AZ_TYPE_FLOAT);
-	ret_val->value.float_v = elea_vec3fp_len ((EleaVec3f *) arg_vals[0]);
-	return 1;
-}
-
-static unsigned int
-vec3f_invoke_normalize (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) elea_vec3f_class;
-	elea_vec3fp_normalize ((EleaVec3f *) ret_val, (EleaVec3f *) arg_vals[0]);
 	return 1;
 }
 

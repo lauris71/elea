@@ -7,15 +7,14 @@
  *
  */
 
-#include <arikkei/arikkei-strlib.h>
 #include <az/field.h>
-#include <az/serialization.h>
 #include <az/extend.h>
 
 #include <elea/aabox.h>
 #include <elea/matrix3x4.h>
 #include <elea/plane.h>
 #include <elea/quaternion.h>
+#include <elea/private.h>
 
 typedef struct _EleaMat3x4fClass EleaMat3x4fClass;
 
@@ -30,9 +29,6 @@ static void matrix_init (EleaMat3x4fClass *klass, EleaMat3x4f *mat);
 /* AZClass implementation */
 static unsigned int matrix_get_property (const AZImplementation *impl, void *instance, unsigned int idx, const AZImplementation **prop_impl, AZValue *prop_val, AZContext *ctx);
 static unsigned int matrix_set_property (const AZImplementation *impl, void *instance, unsigned int idx, const AZImplementation *prop_impl, void *prop_inst, AZContext *ctx);
-static unsigned int matrix_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx);
-static unsigned int matrix_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx);
-static unsigned int matrix_to_string (const AZImplementation* impl, void *instance, unsigned char *buf, unsigned int len);
 
 static unsigned int matrix_call_invert (const AZImplementation **arg_impls, const AZValue **arg_vals, const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
 static unsigned int matrix_call_invertNormalized (const AZImplementation **arg_impls, const AZValue **arg_vals, const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
@@ -91,9 +87,9 @@ matrix_class_init (EleaMat3x4fClass *klass)
 
 	klass->az_klass.get_property = matrix_get_property;
 	klass->az_klass.set_property = matrix_set_property;
-	klass->az_klass.serialize = matrix_serialize;
-	klass->az_klass.deserialize = matrix_deserialize;
-	klass->az_klass.to_string = matrix_to_string;
+	klass->az_klass.serialize = vec_serialize;
+	klass->az_klass.deserialize = vec_deserialize;
+	klass->az_klass.to_string = vec_to_string;
 }
 
 static void
@@ -129,43 +125,6 @@ matrix_set_property (const AZImplementation *impl, void *inst, unsigned int idx,
 		return 0;
 	}
 	return 1;
-}
-
-static unsigned int
-matrix_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx)
-{
-	EleaMat3x4f *mat = (EleaMat3x4f *) inst;
-	if (dlen > 48) {
-		unsigned int i;
-		for (i = 0; i < 12; i++) az_serialize_float (d + 4 * i, 4, &mat->c[i]);
-	}
-	return 48;
-}
-
-static unsigned int
-matrix_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx)
-{
-	EleaMat3x4f *mat = (EleaMat3x4f *) value;
-	unsigned int i;
-	if (slen < 48) return 0;
-	for (i = 0; i < 12; i++) az_deserialize_float (&mat->c[i], s + 4 * i, 4);
-	return 48;
-}
-
-static unsigned int
-matrix_to_string (const AZImplementation* impl, void *instance, unsigned char *d, unsigned int dlen)
-{
-	EleaMat3x4f *mat = (EleaMat3x4f *) instance;
-	unsigned int pos = 0, i;
-	if (pos < dlen) d[pos++] = '(';
-	for (i = 0; i < 11; i++) {
-		pos += arikkei_dtoa_exp (d + pos, (dlen > pos) ? dlen - pos : 0, mat->c[i], 6, -5, 5);
-		if (pos < dlen) d[pos++] = ',';
-	}
-	pos += arikkei_dtoa_exp (d + pos, (dlen > pos) ? dlen - pos : 0, mat->c[11], 6, -5, 5);
-	if (pos < dlen) d[pos++] = ')';
-	if (pos < dlen) d[pos] = 0;
-	return pos;
 }
 
 static unsigned int

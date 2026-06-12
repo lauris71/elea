@@ -9,10 +9,9 @@
 
 #include <string.h>
 
-#include <arikkei/arikkei-strlib.h>
-
-#include <az/serialization.h>
 #include <az/extend.h>
+
+#include <elea/private.h>
 
 #include "vector2.h"
 
@@ -27,21 +26,8 @@ const EleaVec2f EleaVec2fX = { 1, 0 };
 const EleaVec2f EleaVec2fY = { 0, 1 };
 
 static void vec2_class_init (EleaVec2fClass *klass);
-/* AZClass implementation */
-static unsigned int vec2_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx);
-static unsigned int vec2_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx);
-static unsigned int vec2_to_string (const AZImplementation *impl, void *instance, unsigned char *buf, unsigned int len);
 
 static unsigned int vec2f_invoke_new (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_invert (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_add (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_subtract (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_multiply (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_divide (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_dot (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_length2 (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_length (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
-static unsigned int vec2f_invoke_normalize (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
 static unsigned int vec2f_invoke_angle (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx);
 
 enum {
@@ -83,48 +69,22 @@ static void
 vec2_class_init (EleaVec2fClass *klass)
 {
 	az_class_define_static_method_va ((AZClass *) klass, FUNC_NEW, (const unsigned char *) "new", vec2f_invoke_new, ELEA_TYPE_VECTOR2F, 2, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT);
-	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT, (const unsigned char *) "invert", vec2f_invoke_invert, ELEA_TYPE_VECTOR2F, 0, NULL);
-	az_class_define_method_va ((AZClass *) klass, FUNC_ADD, (const unsigned char *) "add", vec2f_invoke_add, ELEA_TYPE_VECTOR2F, 1, ELEA_TYPE_VECTOR2F);
-	az_class_define_method_va ((AZClass *) klass, FUNC_SUBTRACT, (const unsigned char *) "subtract", vec2f_invoke_subtract, ELEA_TYPE_VECTOR2F, 1, ELEA_TYPE_VECTOR2F);
-	az_class_define_method_va ((AZClass *) klass, FUNC_MULTIPLY, (const unsigned char *) "multiply", vec2f_invoke_multiply, ELEA_TYPE_VECTOR2F, 1, AZ_TYPE_FLOAT);
-	az_class_define_method_va ((AZClass *) klass, FUNC_DIVIDE, (const unsigned char *) "divide", vec2f_invoke_divide, ELEA_TYPE_VECTOR2F, 1, AZ_TYPE_FLOAT);
-	az_class_define_method_va ((AZClass *) klass, FUNC_DOT, (const unsigned char *) "dot", vec2f_invoke_dot, AZ_TYPE_FLOAT, 1, ELEA_TYPE_VECTOR2F);
-	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH2, (const unsigned char *) "length2", vec2f_invoke_length2, AZ_TYPE_FLOAT, 0);
-	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH, (const unsigned char *) "length", vec2f_invoke_length, AZ_TYPE_FLOAT, 0);
-	az_class_define_method_va ((AZClass *) klass, FUNC_NORMALIZE, (const unsigned char *) "normalize", vec2f_invoke_normalize, ELEA_TYPE_VECTOR2F, 0);
+	az_class_define_method_va ((AZClass *) klass, FUNC_INVERT, (const unsigned char *) "invert", vec_invoke_invert, ELEA_TYPE_VECTOR2F, 0, NULL);
+	az_class_define_method_va ((AZClass *) klass, FUNC_ADD, (const unsigned char *) "add", vec_invoke_add, ELEA_TYPE_VECTOR2F, 1, ELEA_TYPE_VECTOR2F);
+	az_class_define_method_va ((AZClass *) klass, FUNC_SUBTRACT, (const unsigned char *) "subtract", vec_invoke_subtract, ELEA_TYPE_VECTOR2F, 1, ELEA_TYPE_VECTOR2F);
+	az_class_define_method_va ((AZClass *) klass, FUNC_MULTIPLY, (const unsigned char *) "multiply", vec_invoke_multiply, ELEA_TYPE_VECTOR2F, 1, AZ_TYPE_FLOAT);
+	az_class_define_method_va ((AZClass *) klass, FUNC_DIVIDE, (const unsigned char *) "divide", vec_invoke_divide, ELEA_TYPE_VECTOR2F, 1, AZ_TYPE_FLOAT);
+	az_class_define_method_va ((AZClass *) klass, FUNC_DOT, (const unsigned char *) "dot", vec_invoke_dot, AZ_TYPE_FLOAT, 1, ELEA_TYPE_VECTOR2F);
+	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH2, (const unsigned char *) "length2", vec_invoke_length2, AZ_TYPE_FLOAT, 0);
+	az_class_define_method_va ((AZClass *) klass, FUNC_LENGTH, (const unsigned char *) "length", vec_invoke_length, AZ_TYPE_FLOAT, 0);
+	az_class_define_method_va ((AZClass *) klass, FUNC_NORMALIZE, (const unsigned char *) "normalize", vec_invoke_normalize, ELEA_TYPE_VECTOR2F, 0);
 	az_class_define_method_va ((AZClass *) klass, FUNC_ANGLE, (const unsigned char *) "angle", vec2f_invoke_angle, AZ_TYPE_FLOAT, 1, ELEA_TYPE_VECTOR2F);
 
 	az_class_define_property ((AZClass *) klass, PROP_X, (const unsigned char *) "x", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaVec2f, x), NULL, NULL);
 	az_class_define_property ((AZClass *) klass, PROP_Y, (const unsigned char *) "y", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaVec2f, y), NULL, NULL);
-	klass->az_klass.serialize = vec2_serialize;
-	klass->az_klass.deserialize = vec2_deserialize;
-	klass->az_klass.to_string = vec2_to_string;
-}
-
-static unsigned int
-vec2_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx)
-{
-	return az_serialize_floats(d, dlen, inst, 2);
-}
-
-static unsigned int
-vec2_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx)
-{
-	return az_deserialize_floats(value, s, slen, 2);
-}
-
-static unsigned int
-vec2_to_string (const AZImplementation *impl, void *instance, unsigned char *buf, unsigned int len)
-{
-	EleaVec2f *vec = (EleaVec2f *) instance;
-	unsigned int pos = 0;
-	if (pos < len) buf[pos++] = '(';
-	pos += arikkei_dtoa_exp (buf + pos, (len > pos) ? len - pos : 0, vec->x, 6, -5, 5);
-	if (pos < len) buf[pos++] = ',';
-	pos += arikkei_dtoa_exp (buf + pos, (len > pos) ? len - pos : 0, vec->y, 6, -5, 5);
-	if (pos < len) buf[pos++] = ')';
-	if (pos < len) buf[pos] = 0;
-	return pos;
+	klass->az_klass.serialize = vec_serialize;
+	klass->az_klass.deserialize = vec_deserialize;
+	klass->az_klass.to_string = vec_to_string;
 }
 
 static unsigned int
@@ -132,78 +92,6 @@ vec2f_invoke_new (const AZImplementation *arg_impls[], const AZValue *arg_vals[]
 {
 	*ret_impl = (AZImplementation *) vec2_class;
 	*((EleaVec2f *) ret_val) = elea_vec2f_from_xy (arg_vals[0]->float_v, arg_vals[1]->float_v);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_invert (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) vec2_class;
-	elea_vec2fp_inv((EleaVec2f*) &ret_val, (EleaVec2f*) &arg_vals[0]);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_add (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) vec2_class;
-	elea_vec2fp_add ((EleaVec2f *) &ret_val, (EleaVec2f *) &arg_vals[0], (EleaVec2f *) &arg_vals[1]);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_subtract (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) vec2_class;
-	elea_vec2fp_sub ((EleaVec2f*) &ret_val, (EleaVec2f *) &arg_vals[0], (EleaVec2f *) &arg_vals[1]);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_multiply (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) vec2_class;
-	elea_vec2fp_mul ((EleaVec2f*) &ret_val, (EleaVec2f *) &arg_vals[0], arg_vals[1]->float_v);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_divide (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) vec2_class;
-	elea_vec2fp_div ((EleaVec2f*) &ret_val, (EleaVec2f *) &arg_vals[0], arg_vals[1]->float_v);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_dot (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) az_type_get_class (AZ_TYPE_FLOAT);
-	ret_val->value.float_v = elea_vec2fp_dot ((EleaVec2f *) &arg_vals[0], (EleaVec2f *) &arg_vals[1]);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_length2 (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) az_type_get_class (AZ_TYPE_FLOAT);
-	ret_val->value.float_v = elea_vec2fp_len2 ((EleaVec2f *) &arg_vals[0]);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_length (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) az_type_get_class (AZ_TYPE_FLOAT);
-	ret_val->value.float_v = elea_vec2fp_len ((EleaVec2f *) &arg_vals[0]);
-	return 1;
-}
-
-static unsigned int
-vec2f_invoke_normalize (const AZImplementation *arg_impls[], const AZValue *arg_vals[], const AZImplementation **ret_impl, AZValue64 *ret_val, AZContext *ctx)
-{
-	*ret_impl = (AZImplementation *) vec2_class;
-	elea_vec2fp_normalize ((EleaVec2f *) ret_val, (EleaVec2f *) &arg_vals[0]);
 	return 1;
 }
 

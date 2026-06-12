@@ -9,12 +9,11 @@
 
 #include <math.h>
 
-#include <arikkei/arikkei-strlib.h>
-
 #include <az/class.h>
 #include <az/field.h>
-#include <az/serialization.h>
 #include <az/extend.h>
+
+#include <elea/private.h>
 
 #include "color.h"
 
@@ -24,18 +23,14 @@ struct _EleaColor4fClass {
 	AZClass az_klass;
 };
 
-EleaColor4f EleaColor4fTransparent = { 0, 0, 0, 0 };
-EleaColor4f EleaColor4fBlack = { 0, 0, 0, 1 };
-EleaColor4f EleaColor4fWhite = { 1, 1, 1, 1 };
-EleaColor4f EleaColor4fRed = { 1, 0, 0, 1 };
-EleaColor4f EleaColor4fGreen = { 0, 1, 0, 1 };
-EleaColor4f EleaColor4fBlue = { 0, 0, 1, 1 };
+const EleaColor4f EleaColor4fTransparent = { 0, 0, 0, 0 };
+const EleaColor4f EleaColor4fBlack = { 0, 0, 0, 1 };
+const EleaColor4f EleaColor4fWhite = { 1, 1, 1, 1 };
+const EleaColor4f EleaColor4fRed = { 1, 0, 0, 1 };
+const EleaColor4f EleaColor4fGreen = { 0, 1, 0, 1 };
+const EleaColor4f EleaColor4fBlue = { 0, 0, 1, 1 };
 
 static void color_class_init (EleaColor4fClass *klass);
-/* AZClass implementation */
-static unsigned int color_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx);
-static unsigned int color_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx);
-static unsigned int color_to_string(const AZImplementation* impl, void* instance, unsigned char* buf, unsigned int len);
 
 enum {
 	/* Functions */
@@ -68,37 +63,9 @@ color_class_init (EleaColor4fClass *klass)
 	az_class_define_property(( AZClass*) klass, PROP_G, (const unsigned char*) "g", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET(EleaColor4f, g), NULL, NULL);
 	az_class_define_property(( AZClass*) klass, PROP_B, (const unsigned char*) "b", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET(EleaColor4f, b), NULL, NULL);
 	az_class_define_property(( AZClass*) klass, PROP_A, (const unsigned char*) "a", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET(EleaColor4f, a), NULL, NULL);
-	klass->az_klass.serialize = color_serialize;
-	klass->az_klass.deserialize = color_deserialize;
-	klass->az_klass.to_string = color_to_string;
-}
-
-static unsigned int
-color_serialize (const AZImplementation *impl, void *inst, unsigned char *d, unsigned int dlen, AZContext *ctx)
-{
-	return az_serialize_floats(d, dlen, inst, 4);
-}
-
-static unsigned int
-color_deserialize (const AZImplementation *impl, AZValue *value, const unsigned char *s, unsigned int slen, AZContext *ctx)
-{
-	return az_deserialize_floats(value, s, slen, 4);
-}
-
-static unsigned int
-color_to_string(const AZImplementation* impl, void* instance, unsigned char* buf, unsigned int len)
-{
-	EleaColor4f* col = ( EleaColor4f*) instance;
-	unsigned int pos = 0, i;
-	if (pos < len) buf[pos++] = '(';
-	for (i = 0; i < 3; i++) {
-		pos += arikkei_dtoa_exp(buf + pos, (len > pos) ? len - pos : 0, col->c[i], 6, -5, 5);
-		if (pos < len) buf[pos++] = ',';
-	}
-	pos += arikkei_dtoa_exp(buf + pos, (len > pos) ? len - pos : 0, col->c[2], 6, -5, 5);
-	if (pos < len) buf[pos++] = ')';
-	if (pos < len) buf[pos] = 0;
-	return pos;
+	klass->az_klass.serialize = vec_serialize;
+	klass->az_klass.deserialize = vec_deserialize;
+	klass->az_klass.to_string = vec_to_string;
 }
 
 float

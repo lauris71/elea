@@ -20,12 +20,12 @@ extern "C" {
 #endif
 
 #ifndef __ELEA_COLOR_C__
-extern EleaColor4f EleaColor4fTransparent;
-extern EleaColor4f EleaColor4fBlack;
-extern EleaColor4f EleaColor4fWhite;
-extern EleaColor4f EleaColor4fRed;
-extern EleaColor4f EleaColor4fGreen;
-extern EleaColor4f EleaColor4fBlue;
+const extern EleaColor4f EleaColor4fTransparent;
+const extern EleaColor4f EleaColor4fBlack;
+const extern EleaColor4f EleaColor4fWhite;
+const extern EleaColor4f EleaColor4fRed;
+const extern EleaColor4f EleaColor4fGreen;
+const extern EleaColor4f EleaColor4fBlue;
 #endif
 
 struct _EleaColor4f {
