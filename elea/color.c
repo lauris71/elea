@@ -9,6 +9,7 @@
 
 #include <math.h>
 
+#include <az/types.h>
 #include <az/class.h>
 #include <az/field.h>
 #include <az/extend.h>
@@ -48,12 +49,17 @@ static unsigned int color_type = 0;
 unsigned int
 elea_color4f_get_type (void)
 {
+	unsigned int t = AZ_TYPE_READ(color_type);
+	if (t) return t;
+	AZ_TYPES_LOCK();
 	if (!color_type) {
 		az_register_type (&color_type, (const unsigned char *) "Color4f", AZ_TYPE_STRUCT, sizeof (EleaColor4fClass), sizeof (EleaColor4f), AZ_FLAG_FINAL, 0, NUM_PROPERTIES,
 			(void (*) (AZClass *)) color_class_init,
 			NULL, NULL);
 	}
-	return color_type;
+	t = color_type;
+	AZ_TYPES_UNLOCK();
+	return t;
 }
 
 static void

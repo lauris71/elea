@@ -7,6 +7,7 @@
 *
 */
 
+#include <az/types.h>
 #include <az/extend.h>
 
 #include <elea/private.h>
@@ -58,33 +59,38 @@ static EleaQuatfClass * quat_class = NULL;
 unsigned int
 elea_quatf_get_type (void)
 {
+	unsigned int t = AZ_TYPE_READ(quat_type);
+	if (t) return t;
+	AZ_TYPES_LOCK();
 	if (!quat_type) {
 		quat_class = (EleaQuatfClass *) az_register_type (&quat_type, (const unsigned char*) "Quaternionf", AZ_TYPE_STRUCT, sizeof (EleaQuatfClass), sizeof (EleaQuatf), AZ_FLAG_FINAL, 0, NUM_PROPERTIES,
 			(void (*) (AZClass*)) quat_class_init,
 			NULL, NULL);
 	}
-	return quat_type;
+	t = quat_type;
+	AZ_TYPES_UNLOCK();
+	return t;
 }
 
 static void
 quat_class_init (EleaQuatfClass* klass)
 {
 	az_class_define_static_method_va ((AZClass *) klass, FUNC_NEW, (const unsigned char *) "new", quat_invoke_new, ELEA_TYPE_QUATF, 4, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT, AZ_TYPE_FLOAT);
-  	az_class_define_method_va ((AZClass*) klass, FUNC_NORM, (const unsigned char*) "norm", vec_invoke_length, AZ_TYPE_FLOAT, 0 );
-  	az_class_define_method_va ((AZClass*) klass, FUNC_NORM2, (const unsigned char*) "norm2", vec_invoke_length2, AZ_TYPE_FLOAT, 0 );
-  	az_class_define_method_va ((AZClass*) klass, FUNC_NEGATE, (const unsigned char*) "negate", vec_invoke_invert, ELEA_TYPE_QUATF, 0 );
-  	az_class_define_method_va ((AZClass*) klass, FUNC_CONJUGATE, (const unsigned char*) "conjugate", quat_invoke_conjugate, ELEA_TYPE_QUATF, 0 );
-  	az_class_define_method_va ((AZClass*) klass, FUNC_INVERSE, (const unsigned char*) "inverse", quat_invoke_inverse, ELEA_TYPE_QUATF, 0 );
-  	az_class_define_method_va ((AZClass*) klass, FUNC_NORMALIZE, (const unsigned char*) "normalize", vec_invoke_normalize, ELEA_TYPE_QUATF, 0 );
-  	az_class_define_method_va ((AZClass*) klass, FUNC_MULTIPLY_SCALAR, (const unsigned char *) "multiply", vec_invoke_multiply, ELEA_TYPE_QUATF, 1, AZ_TYPE_FLOAT);
-	az_class_define_method_va ((AZClass*) klass, FUNC_MULTIPLY, (const unsigned char *) "multiply", quat_invoke_multiply, ELEA_TYPE_QUATF, 1, ELEA_TYPE_QUATF);
-	az_class_define_method_va ((AZClass*) klass, FUNC_DOT, (const unsigned char *) "dot", quat_invoke_dot, AZ_TYPE_FLOAT, 1, ELEA_TYPE_QUATF);
-	az_class_define_method_va ((AZClass*) klass, FUNC_SLERP, (const unsigned char *) "slerp", quat_invoke_slerp, ELEA_TYPE_QUATF, 2, ELEA_TYPE_QUATF, AZ_TYPE_FLOAT);
+  	az_class_define_method_va ((AZClass *) klass, FUNC_NORM, (const unsigned char*) "norm", vec_invoke_length, AZ_TYPE_FLOAT, 0 );
+  	az_class_define_method_va ((AZClass *) klass, FUNC_NORM2, (const unsigned char*) "norm2", vec_invoke_length2, AZ_TYPE_FLOAT, 0 );
+  	az_class_define_method_va ((AZClass *) klass, FUNC_NEGATE, (const unsigned char*) "negate", vec_invoke_invert, ELEA_TYPE_QUATF, 0 );
+  	az_class_define_method_va ((AZClass *) klass, FUNC_CONJUGATE, (const unsigned char*) "conjugate", quat_invoke_conjugate, ELEA_TYPE_QUATF, 0 );
+  	az_class_define_method_va ((AZClass *) klass, FUNC_INVERSE, (const unsigned char*) "inverse", quat_invoke_inverse, ELEA_TYPE_QUATF, 0 );
+  	az_class_define_method_va ((AZClass *) klass, FUNC_NORMALIZE, (const unsigned char*) "normalize", vec_invoke_normalize, ELEA_TYPE_QUATF, 0 );
+  	az_class_define_method_va ((AZClass *) klass, FUNC_MULTIPLY_SCALAR, (const unsigned char *) "multiply", vec_invoke_multiply, ELEA_TYPE_QUATF, 1, AZ_TYPE_FLOAT);
+	az_class_define_method_va ((AZClass *) klass, FUNC_MULTIPLY, (const unsigned char *) "multiply", quat_invoke_multiply, ELEA_TYPE_QUATF, 1, ELEA_TYPE_QUATF);
+	az_class_define_method_va ((AZClass *) klass, FUNC_DOT, (const unsigned char *) "dot", quat_invoke_dot, AZ_TYPE_FLOAT, 1, ELEA_TYPE_QUATF);
+	az_class_define_method_va ((AZClass *) klass, FUNC_SLERP, (const unsigned char *) "slerp", quat_invoke_slerp, ELEA_TYPE_QUATF, 2, ELEA_TYPE_QUATF, AZ_TYPE_FLOAT);
 
-	az_class_define_property ((AZClass*) klass, PROP_I, (const unsigned char*) "i", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, i), NULL, NULL);
-	az_class_define_property ((AZClass*) klass, PROP_J, (const unsigned char*) "j", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, j), NULL, NULL);
-	az_class_define_property ((AZClass*) klass, PROP_K, (const unsigned char*) "k", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, k), NULL, NULL);
-	az_class_define_property ((AZClass*) klass, PROP_R, (const unsigned char*) "r", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, r), NULL, NULL);
+	az_class_define_property ((AZClass *) klass, PROP_I, (const unsigned char*) "i", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, i), NULL, NULL);
+	az_class_define_property ((AZClass *) klass, PROP_J, (const unsigned char*) "j", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, j), NULL, NULL);
+	az_class_define_property ((AZClass *) klass, PROP_K, (const unsigned char*) "k", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, k), NULL, NULL);
+	az_class_define_property ((AZClass *) klass, PROP_R, (const unsigned char*) "r", AZ_TYPE_FLOAT, 1, AZ_FIELD_INSTANCE, AZ_FIELD_READ_VALUE, 0, ARIKKEI_OFFSET (EleaQuatf, r), NULL, NULL);
 	klass->az_klass.serialize = vec_serialize;
 	klass->az_klass.deserialize = vec_deserialize;
 	klass->az_klass.to_string = vec_to_string;

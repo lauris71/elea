@@ -7,6 +7,7 @@
  *
  */
 
+#include <az/types.h>
 #include <az/extend.h>
 
 #include <elea/matrix3x4.h>
@@ -43,6 +44,9 @@ static EleaMat4x4fClass *mat_class;
 unsigned int
 elea_mat4x4f_get_type (void)
 {
+	unsigned int t = AZ_TYPE_READ(mat_type);
+	if (t) return t;
+	AZ_TYPES_LOCK();
 	if (!mat_type) {
 		az_register_type (&mat_type, (const unsigned char *) "Matrix4x4f", AZ_TYPE_STRUCT, sizeof (EleaMat4x4fClass), sizeof (EleaMat4x4f), AZ_FLAG_FINAL, 0, NUM_PROPERTIES,
 			(void (*) (AZClass *)) matrix_class_init,
@@ -52,7 +56,9 @@ elea_mat4x4f_get_type (void)
 		/* Ensure required types are registered */
 		elea_vec3f_get_type ();
 	}
-	return mat_type;
+	t = mat_type;
+	AZ_TYPES_UNLOCK();
+	return t;
 }
 
 static void

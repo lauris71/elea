@@ -32,6 +32,8 @@ struct _EleaVec2f {
 	};
 };
 
+unsigned int elea_vec2f_get_type (void);
+
 static inline EleaVec2f
 elea_vec2f_from_xy (float x, float y)
 {

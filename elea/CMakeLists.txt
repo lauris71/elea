@@ -44,5 +44,7 @@ set_property(TARGET elea PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_include_directories(elea PUBLIC
 	${PROJECT_SOURCE_DIR}
 	${CMAKE_SOURCE_DIR}/arikkei
+	${CMAKE_SOURCE_DIR}/../arikkei
     ${CMAKE_SOURCE_DIR}/az
+    ${CMAKE_SOURCE_DIR}/../az
 )

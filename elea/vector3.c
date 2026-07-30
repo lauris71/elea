@@ -9,6 +9,7 @@
 
 #include <string.h>
 
+#include <az/types.h>
 #include <az/extend.h>
 
 #include <elea/private.h>
@@ -62,13 +63,18 @@ EleaVec3fClass *elea_vec3f_class = NULL;
 unsigned int
 elea_vec3f_get_type (void)
 {
+	unsigned int t = AZ_TYPE_READ(vec3_type);
+	if (t) return t;
+	AZ_TYPES_LOCK();
 	if (!vec3_type) {
 		az_register_type (&vec3_type, (const unsigned char *) "Vector3f", AZ_TYPE_STRUCT, sizeof (EleaVec3fClass), sizeof (EleaVec3f), AZ_FLAG_FINAL, 0, NUM_PROPERTIES,
 			(void (*) (AZClass *)) vec3_class_init,
 			NULL, NULL);
 		elea_vec3f_class = (EleaVec3fClass *) az_type_get_class (vec3_type);
 	}
-	return vec3_type;
+	t = vec3_type;
+	AZ_TYPES_UNLOCK();
+	return t;
 }
 
 static void

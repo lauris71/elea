@@ -7,6 +7,7 @@
  *
  */
 
+#include <az/types.h>
 #include <az/field.h>
 #include <az/extend.h>
 
@@ -41,13 +42,18 @@ static unsigned int mat_type = 0;
 unsigned int
 elea_mat3x3f_get_type (void)
 {
+	unsigned int t = AZ_TYPE_READ(mat_type);
+	if (t) return t;
+	AZ_TYPES_LOCK();
 	if (!mat_type) {
 		az_register_type (&mat_type, (const unsigned char *) "Matrix3x3f", AZ_TYPE_STRUCT, sizeof (EleaMat3x3fClass), sizeof (EleaMat3x3f), AZ_FLAG_FINAL, 0, 0,
 			(void (*) (AZClass *)) matrix_class_init,
 			(void (*) (const AZImplementation *, void *)) matrix_init,
 			NULL);
 	}
-	return mat_type;
+	t = mat_type;
+	AZ_TYPES_UNLOCK();
+	return t;
 }
 
 static void
